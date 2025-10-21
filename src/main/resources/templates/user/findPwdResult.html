@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>인증번호 입력 - 오늘득템</title>
+  <style>
+    /* 전역 초기화 */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+    }
+    
+    /* 결과 래퍼 */
+    .result-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 180px);
+      padding: 40px 20px;
+    }
+    
+    /* 결과 카드 */
+    .result-card {
+      width: 100%;
+      max-width: 540px;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 48px 40px;
+      text-align: center;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* 아이콘 */
+    .result-icon {
+      font-size: 80px;
+      margin-bottom: 24px;
+      animation: bounce 0.6s ease-out;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    .result-icon.success { color: #2F9D27; }
+    .result-icon.fail { color: #e74c3c; }
+    
+    /* 제목 */
+    .result-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+    }
+    
+    /* 메시지 */
+    .result-msg {
+      font-size: 1.05rem;
+      color: #555;
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+    
+    /* 폼 행 */
+    .form-row {
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    
+    .form-row label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #495057;
+      font-size: 0.95rem;
+    }
+    
+    .form-row input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 2px solid #dee2e6;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+      text-align: center;
+      letter-spacing: 4px;
+      font-weight: 600;
+    }
+    
+    .form-row input:focus {
+      outline: none;
+      border-color: #667eea;
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+    
+    /* 이메일 정보 박스 */
+    .email-info {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+      color: #155724;
+      border: 2px solid #b1dfbb;
+      line-height: 1.6;
+    }
+    
+    /* 기본 버튼 */
+    .btn-primary {
+      width: 100%;
+      padding: 16px 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    /* 보조 버튼 */
+    .btn-secondary {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #dee2e6;
+      border-radius: 12px;
+      cursor: pointer;
+      background: #fff;
+      color: #495057;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: #f8f9fa;
+      border-color: #adb5bd;
+      transform: translateY(-1px);
+    }
+    
+    /* 카운트다운 */
+    .countdown {
+      margin-top: 24px;
+      font-size: 0.9rem;
+      color: #6c757d;
+      font-style: italic;
+    }
+    
+    .timer {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-top: 12px;
+      box-shadow: 0 4px 12px rgba(238, 90, 111, 0.3);
+      animation: pulse 1s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    /* 반응형 디자인 */
+    @media (max-width: 600px) {
+      .result-card {
+        padding: 32px 24px;
+      }
+      
+      .result-title {
+        font-size: 1.6rem;
+      }
+      
+      .result-icon {
+        font-size: 64px;
+      }
+    }
+  </style>
+  <script th:inline="javascript">
+    var result = /*[[${result}]]*/ 0;
+    
+    // 실패 시 3초 후 뒤로가기
+    if(result === 0 || result === -1) {
+      let countdown = 3;
+      
+      window.onload = function() {
+        const countdownElement = document.getElementById('countdown');
+        const timer = setInterval(function(){
+          countdown--;
+          if(countdownElement) {
+            countdownElement.textContent = countdown;
+          }
+          
+          if(countdown <= 0) {
+            clearInterval(timer);
+            history.back();
+          }
+        }, 1000);
+      }
+    }
+    
+    // 인증번호 입력 폼 유효성 검사
+    function validateCode() {
+      const code = document.getElementById('verificationCode').value.trim();
+      if(code.length !== 6) {
+        alert('인증번호 6자리를 입력해주세요.');
+        return false;
+      }
+      return true;
+    }
+    
+    // 인증번호 유효시간 타이머 (5분)
+    if(result === 1) {
+      window.onload = function() {
+        let timeLeft = 300; // 5분 = 300초
+        const timerElement = document.getElementById('timer');
+        
+        const countdown = setInterval(function(){
+          const minutes = Math.floor(timeLeft / 60);
+          const seconds = timeLeft % 60;
+          
+          if(timerElement) {
+            timerElement.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+          }
+          
+          timeLeft--;
+          
+          if(timeLeft < 0) {
+            clearInterval(countdown);
+            alert('인증 시간이 만료되었습니다. 처음부터 다시 시도해주세요.');
+            location.href='/user/findPwd';
+          }
+        }, 1000);
+      }
+    }
+  </script>
+</head>
+<body>
+  <div th:replace="~{layouts/header.html}"></div>
+  
+  <!-- 인증번호 발송 성공 -->
+  <div class="result-wrap" th:if="${result == 1}">
+    <div class="result-card">
+      <div class="result-icon success">✉️</div>
+      <h1 class="result-title">인증번호가 발송되었습니다</h1>
+      <p class="result-msg">
+        입력하신 이메일로 인증번호를 발송했습니다.<br>
+        이메일을 확인하여 인증번호를 입력해주세요.
+      </p>
+      
+      <div class="email-info">
+        📧 [[${email}]]<br>
+        위 이메일로 6자리 인증번호가 발송되었습니다.
+      </div>
+      
+      <form action="/user/verifyCode" method="post" onsubmit="return validateCode()">
+        <div class="form-row">
+          <label for="verificationCode">인증번호 입력</label>
+          <input type="text" id="verificationCode" name="verificationCode" 
+                 placeholder="6자리 인증번호" maxlength="6" pattern="[0-9]{6}" required />
+        </div>
+        
+        <button type="submit" class="btn-primary">인증번호 확인</button>
+        <button type="button" class="btn-secondary" onclick="history.back()">취소</button>
+        
+        <div class="countdown">
+          유효시간: <span class="timer" id="timer">5:00</span>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- 회원정보 없음 -->
+  <div class="result-wrap" th:if="${result == 0}">
+    <div class="result-card">
+      <div class="result-icon fail">✗</div>
+      <h1 class="result-title">일치하는 회원정보가 없습니다</h1>
+      <p class="result-msg">
+        입력하신 정보와 일치하는 회원 정보가 없습니다.<br>
+        다시 확인해주세요.
+      </p>
+      
+      <button class="btn-primary" onclick="history.back()">뒤로 돌아가기</button>
+      <button class="btn-secondary" onclick="location.href='/user/userWriteForm'">회원가입</button>
+      
+      <div class="countdown">
+        <span id="countdown">3</span>초 후 자동으로 돌아갑니다.
+      </div>
+    </div>
+  </div>
+  
+  <!-- 이메일 발송 실패 -->
+  <div class="result-wrap" th:if="${result == -1}">
+    <div class="result-card">
+      <div class="result-icon fail">⚠️</div>
+      <h1 class="result-title">이메일 발송 실패</h1>
+      <p class="result-msg">
+        인증번호 이메일 발송에 실패했습니다.<br>
+        잠시 후 다시 시도해주세요.
+      </p>
+      
+      <button class="btn-primary" onclick="history.back()">뒤로 돌아가기</button>
+      <button class="btn-secondary" onclick="location.href='/user/findPwd'">다시 시도</button>
+      
+      <div class="countdown">
+        <span id="countdown">3</span>초 후 자동으로 돌아갑니다.
+      </div>
+    </div>
+  </div>
+  
+  <div th:replace="~{layouts/footer.html}"></div>
+</body>
+</html>
+
