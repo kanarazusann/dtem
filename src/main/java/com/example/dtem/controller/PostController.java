@@ -36,7 +36,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/post")
 public class PostController {
 
     @Autowired
@@ -72,6 +71,14 @@ public class PostController {
 
     private static final int PAGE_SIZE = 5;   // 한 페이지당 글 수
     private static final int PAGE_BLOCK = 10;  // 페이징 블록 크기 (1~10)
+
+    /**
+     * 홈페이지 - 게시글 목록으로 리다이렉트
+     */
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/post/postList";
+    }
 
     /**
      * ✅ 게시글 목록 조회 (페이징 + 동적 검색)
