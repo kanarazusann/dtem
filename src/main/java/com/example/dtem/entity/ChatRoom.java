@@ -16,8 +16,7 @@ import java.time.LocalDateTime;
 public class ChatRoom {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chat_room_seq")
-    @SequenceGenerator(name = "chat_room_seq", sequenceName = "CHAT_ROOM_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"id\"")
     private Long id;
     

@@ -16,8 +16,7 @@ import java.time.LocalDateTime;
 public class ChatMessage {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chat_message_seq")
-    @SequenceGenerator(name = "chat_message_seq", sequenceName = "CHAT_MESSAGE_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"id\"")
     private Long id;
     

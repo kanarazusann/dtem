@@ -15,8 +15,7 @@ import java.time.LocalDateTime;
 public class PostLike {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "like_seq")
-    @SequenceGenerator(name = "like_seq", sequenceName = "POST_LIKE_LIKESEQ_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "LIKESEQ")
     private Integer likeSeq;
     

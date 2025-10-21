@@ -16,8 +16,7 @@ import java.time.LocalDateTime;
 public class Trade {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "trade_seq")
-    @SequenceGenerator(name = "trade_seq", sequenceName = "TRADE_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "\"trade_id\"")
     private Long tradeId;
     

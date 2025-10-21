@@ -20,11 +20,10 @@ public class Users {
     
     /**
      * 회원 고유 ID (Primary Key)
-     * Oracle Sequence를 사용하여 자동 생성
+     * PostgreSQL SERIAL (Railway 배포) / Oracle Sequence (로컬)
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "USER_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USERID")
     private Integer userId;
     /**
