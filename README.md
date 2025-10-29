@@ -90,9 +90,6 @@ src/main/java/com/example/dtem/
 
 - `users` - ユーザー情報
 - `posts` - 商品情報
-- `post_category` - 商品カテゴリ
-- `post_location` - 地域情報
-- `post_image` - 商品画像
 - `post_like` - お気に入り
 - `chat_room` - チャットルーム
 - `chat_message` - チャットメッセージ
